@@ -11,7 +11,8 @@ using CoordinateTransformations,
     StaticArrays,
     Tracking,
     Unitful,
-    Statistics
+    Statistics,
+    PrecompileTools
 
 using Unitful: s, Hz
 
@@ -215,7 +216,7 @@ function get_system_start_time(
 end
 
 function get_week(decoder::GNSSDecoder.GNSSDecoderState{<:GNSSDecoder.GPSL1Data})
-    2048 + decoder.data.trans_week
+    2048 + decoder.data.trans_week #todo make this flexible
 end
 
 function get_week(decoder::GNSSDecoder.GNSSDecoderState{<:GNSSDecoder.GalileoE1BData})
@@ -229,4 +230,18 @@ end
 include("user_position.jl")
 include("sat_time.jl")
 include("sat_position.jl")
+
+@setup_workload begin
+    # Putting some things in `@setup_workload` instead of `@compile_workload` can reduce the size of the
+    # precompile file and potentially make loading faster.
+    using BitIntegers, Test
+    @compile_workload begin
+        # all calls in this block will be precompiled, regardless of whether
+        # they belong to your package or not (on Julia 1.8 and higher)
+        include("../test/pvt.jl")
+    end
+end
+
+
+
 end
