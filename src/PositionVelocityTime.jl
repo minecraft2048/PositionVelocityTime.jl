@@ -112,6 +112,18 @@ function get_tdop(pvt_sol::PVTSolution)
     return pvt_sol.dop.TDOP
 end
 
+
+
+function Base.show(io::IO, ::MIME"text/plain", res::PVTSolution)
+    lla = get_LLA(res)
+    println(io, "PVT solution at $(res.time): ")
+    println(io, "Position: lat=$(lla.lat)° lon=$(lla.lon)° alt=$(lla.alt) m")
+    println(io, "(GDOP: $(res.dop.GDOP))")
+    println(io, "Velocity: x=$(res.velocity[1]) m/s y=$(res.velocity[2]) m/s z=$(res.velocity[3]) m/s")
+    println(io, "Satellites used for this navigation solution: $(length(res.sats))")
+    println(io, "Relative clock drift: $(res.relative_clock_drift)")
+end
+
 """
 Calculates East-North-Up (ENU) coordinates of satellite in spherical
 form (azimuth and elevation).
