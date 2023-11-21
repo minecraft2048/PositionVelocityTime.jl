@@ -243,7 +243,7 @@ include("user_position.jl")
 include("sat_time.jl")
 include("sat_position.jl")
 
-@setup_workload begin
+#= @setup_workload begin
     # Putting some things in `@setup_workload` instead of `@compile_workload` can reduce the size of the
     # precompile file and potentially make loading faster.
     using BitIntegers, Test
@@ -253,7 +253,10 @@ include("sat_position.jl")
         include("../test/pvt.jl")
     end
 end
+ =#
 
+ include("precompile.jl")
+_precompile_()
 
 
 end
